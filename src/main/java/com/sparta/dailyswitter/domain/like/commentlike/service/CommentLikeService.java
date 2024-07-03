@@ -82,7 +82,7 @@ public class CommentLikeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CommentResponseDto> getLikeComments(User user, Pageable pageable) {
+    public Page<CommentResponseDto> getLikedComments(User user, Pageable pageable) {
         QCommentLike qCommentLike = QCommentLike.commentLike;
 
         List<Comment> comments = jpaQueryFactory.select(qCommentLike.id.comment)
@@ -102,5 +102,14 @@ public class CommentLikeService {
             .collect(Collectors.toList());
 
         return new PageImpl<>(commentResponseDtos, pageable, total);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean CommentsLikedByUser(Long postId, User user) {
+        QCommentLike qCommentLike = QCommentLike.commentLike;
+        return jpaQueryFactory.selectFrom(qCommentLike)
+            .where(qCommentLike.id.comment.id.eq(postId)
+                .and(qCommentLike.id.user.eq(user)))
+            .fetchFirst() != null;
     }
 }

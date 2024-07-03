@@ -1,5 +1,6 @@
 package com.sparta.dailyswitter.domain.post.dto;
 
+import com.sparta.dailyswitter.domain.post.entity.Post;
 import java.time.LocalDateTime;
 
 import lombok.Builder;
@@ -25,5 +26,15 @@ public class PostResponseDto {
 		this.isPinned = isPinned;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+	}
+
+	public PostResponseDto(Post post) {
+		this.title = post.getTitle();
+		this.contents = post.getContents();
+		this.userId = post.getUser().getUsername();
+		this.postLikes = post.getPostLikes();
+		this.isPinned = post.isPinned();
+		this.createdAt = post.getCreatedAt();
+		this.updatedAt = post.getUpdatedAt();
 	}
 }

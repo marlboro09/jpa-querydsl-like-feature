@@ -44,9 +44,16 @@ public class CommentLikeController {
 	}
 
 	@GetMapping("/comments/likes")
-	public ResponseEntity<Page<CommentResponseDto>> getLikeComments(@AuthenticationPrincipal
+	public ResponseEntity<Page<CommentResponseDto>> getLikedComments(@AuthenticationPrincipal
 		UserDetailsImpl userDetails, Pageable pageable) {
-		Page<CommentResponseDto> likedComment = commentLikeService.getLikeComments(userDetails.getUser(), pageable);
+		Page<CommentResponseDto> likedComment = commentLikeService.getLikedComments(userDetails.getUser(), pageable);
 		return ResponseEntity.status(HttpStatus.OK).body(likedComment);
+	}
+
+	@GetMapping("/posts/{commentId}/likes")
+	public ResponseEntity<Boolean> CommentsLikedByUser(@PathVariable Long commentId, @AuthenticationPrincipal
+	UserDetailsImpl userDetails) {
+		boolean isLiked = commentLikeService.CommentsLikedByUser(commentId, userDetails.getUser());
+		return ResponseEntity.status(HttpStatus.OK).body(isLiked);
 	}
 }
