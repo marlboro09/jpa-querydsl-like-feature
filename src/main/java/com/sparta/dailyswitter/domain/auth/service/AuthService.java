@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
-	@Value("${admin.token}")
+	@Value("${admin.token:default-admin-token}")
 	private String adminToken;
 
 	private final AuthenticationManager authenticationManager;
@@ -56,7 +56,7 @@ public class AuthService {
 
 		UserRoleEnum role = UserRoleEnum.USER;
 		if (requestDto.isAdmin()) {
-			if (!adminToken.equals(requestDto.getAdminToken())) {
+			if (requestDto.getAdminToken() == null || !adminToken.equals(requestDto.getAdminToken())) {
 				throw new CustomException(ErrorCode.INCORRECT_ADMIN_KEY);
 			}
 			role = UserRoleEnum.ADMIN;

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<form action="http://localhost:8080/login" method="post">
+    <label for="loginId">Login ID:</label>
+    <input type="text" id="loginId" name="loginId"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+    <button type="submit">Login</button>
+</form>
+<a href="http://localhost:8080/oauth2/authorization/kakao">Login with Kakao</a><br>
+<a href="http://localhost:8080/oauth2/authorization/naver">Login with Naver</a><br><br>
+<a href="http://localhost:8080/swagger-ui.html">Swagger UI</a>
+
+<h2>Token Information</h2>
+<div id="token-info"></div>
+
+<script>
+    // Check if there are query parameters in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get('accessToken');
+    const refreshToken = urlParams.get('refreshToken');
+
+    if (accessToken && refreshToken) {
+        // Display tokens or do something with them
+        document.getElementById('token-info').innerHTML = `
+            <p>Access Token: ${accessToken}</p>
+            <p>Refresh Token: ${refreshToken}</p>
+        `;
+
+        // Optionally, you can store the tokens in localStorage for later use
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+    }
+</script>
+<script src="/swagger-ui-custom.js"></script>
+</body>
+</html>

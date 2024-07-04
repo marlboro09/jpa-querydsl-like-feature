@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success</title>
+</head>
+<body>
+<h1>Login Successful</h1>
+<p>Access Token and Refresh Token have been generated successfully.</p>
+
+<h2>Token Information</h2>
+<div id="token-info"></div>
+
+<script>
+    // Check if there are query parameters in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get('accessToken');
+    const refreshToken = urlParams.get('refreshToken');
+
+    if (accessToken && refreshToken) {
+        // Display tokens or do something with them
+        document.getElementById('token-info').innerHTML = `
+            <p>Access Token: ${accessToken}</p>
+            <p>Refresh Token: ${refreshToken}</p>
+        `;
+
+        // Optionally, you can store the tokens in localStorage for later use
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+    }
+</script>
+</body>
+</html>

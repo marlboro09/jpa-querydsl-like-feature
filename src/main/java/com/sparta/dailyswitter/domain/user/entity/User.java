@@ -1,13 +1,7 @@
 package com.sparta.dailyswitter.domain.user.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import com.sparta.dailyswitter.common.util.Timestamped;
 import com.sparta.dailyswitter.domain.user.dto.UserInfoRequestDto;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -20,134 +14,138 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users") // 테이블 이름을 'users'로 수정
 public class User extends Timestamped {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Long id;
 
-	@NotBlank
-	@Column(name = "login_id", nullable = false, unique = true)
-	private String userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-	@NotBlank
-	@Column(name = "user_name")
-	private String username;
+    @NotBlank
+    @Column(name = "login_id", nullable = false, unique = true)
+    private String userId;
 
-	@Column(name = "password")
-	private String password;
+    @NotBlank
+    @Column(name = "user_name")
+    private String username;
 
-	@Column(name = "email")
-	private String email;
+    @Column(name = "password")
+    private String password;
 
-	private String provider;
+    @Column(name = "email")
+    private String email;
 
-	private String providerId;
+    private String provider;
 
-	@Column(name = "intro")
-	private String intro;
+    private String providerId;
 
-	@Column(name = "refresh_token")
-	private String refreshToken;
+    @Column(name = "intro")
+    private String intro;
 
-	@Column(name = "access_token")  // 액세스 토큰 필드 추가
-	private String accessToken;
+    @Column(name = "refresh_token")
+    private String refreshToken;
 
-  @Column(name = "is_blocked")
-	private boolean isBlocked = false;
+    @Column(name = "access_token")  // 액세스 토큰 필드 추가
+    private String accessToken;
 
-	@Column(nullable = false)
-	@Enumerated(value = EnumType.STRING)
-	private UserRoleEnum role;
+    @Builder.Default
+    @Column(name = "is_blocked")
+    private boolean isBlocked = false;
 
-	@Column(unique = true)
-	private String kakaoId;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
-	@Column(unique = true)
-	private String naverId;
+    @Column(unique = true)
+    private String kakaoId;
 
-	@ElementCollection
-	@CollectionTable(name = "password_history", joinColumns = @JoinColumn(name = "user_id"))
-	private List<String> passwordHistory = new ArrayList<>();
+    @Column(unique = true)
+    private String naverId;
 
-	public User(String username, String password, String email, UserRoleEnum role, String kakaoId, String googleId, String naverId) {
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.role = role;
-		this.kakaoId = kakaoId;
-		this.naverId = naverId;
-	}
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "password_history", joinColumns = @JoinColumn(name = "user_id"))
+    private List<String> passwordHistory = new ArrayList<>();
 
-	public void updateUserInfo(UserInfoRequestDto userInfoRequestDto) {
-		this.username = updateField(userInfoRequestDto.getUsername(), username);
-		this.intro = updateField(userInfoRequestDto.getIntro(), intro);
-	}
+    public User(String username, String password, String email, UserRoleEnum role, String kakaoId,
+        String naverId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.kakaoId = kakaoId;
+        this.naverId = naverId;
+    }
 
-	public void updatePassword(String newPassword) {
-		if (this.passwordHistory.size() >= 4) {
-			this.passwordHistory.remove(0);
-		}
-		this.passwordHistory.add(this.password);
-		this.password = newPassword;
-	}
+    public void updateUserInfo(UserInfoRequestDto userInfoRequestDto) {
+        this.username = updateField(userInfoRequestDto.getUsername(), username);
+        this.intro = updateField(userInfoRequestDto.getIntro(), intro);
+    }
 
-	public boolean isPasswordInHistory(String password, PasswordEncoder passwordEncoder) {
-		for (String oldPassword : passwordHistory) {
-			if (passwordEncoder.matches(password, oldPassword)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public void updatePassword(String newPassword) {
+        if (this.passwordHistory.size() >= 4) {
+            this.passwordHistory.remove(0);
+        }
+        this.passwordHistory.add(this.password);
+        this.password = newPassword;
+    }
 
-	public boolean isExist() {
-		return this.role != UserRoleEnum.WITHDRAW;
-	}
+    public boolean isPasswordInHistory(String password, PasswordEncoder passwordEncoder) {
+        for (String oldPassword : passwordHistory) {
+            if (passwordEncoder.matches(password, oldPassword)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public void updateRefresh(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
+    public boolean isExist() {
+        return this.role != UserRoleEnum.WITHDRAW;
+    }
 
-	public void updateAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
+    public void updateRefresh(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
-	public void updateStatusSignout() {
-		this.role = UserRoleEnum.WITHDRAW;
-	}
+    public void updateAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-	public void updateStatus(UserRoleEnum role) {
-		this.role = role;
-	}
+    public void updateStatusSignout() {
+        this.role = UserRoleEnum.WITHDRAW;
+    }
 
-	public void toggleBlock() {
-		this.isBlocked = !this.isBlocked;
-	}
+    public void updateStatus(UserRoleEnum role) {
+        this.role = role;
+    }
 
-	private String updateField(String newValue, String currentValue) {
-		return newValue == null || newValue.isBlank() ? currentValue : newValue;
-	}
+    public void toggleBlock() {
+        this.isBlocked = !this.isBlocked;
+    }
 
-	public void setKakaoId(String kakaoId) {
-		this.kakaoId = kakaoId;
-	}
+    private String updateField(String newValue, String currentValue) {
+        return newValue == null || newValue.isBlank() ? currentValue : newValue;
+    }
 
-	public void setNaverId(String naverId) {
-		this.naverId = naverId;
-	}
+    public void setKakaoId(String kakaoId) {
+        this.kakaoId = kakaoId;
+    }
+
+    public void setNaverId(String naverId) {
+        this.naverId = naverId;
+    }
 }
