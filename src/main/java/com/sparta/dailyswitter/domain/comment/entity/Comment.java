@@ -43,7 +43,8 @@ public class Comment extends Timestamped {
 	private Long commentLikes;
 
 	@Builder
-	public Comment(User user, Post post, CommentRequestDto requestDto) {
+	public Comment(Long id, User user, Post post, CommentRequestDto requestDto) {
+		this.id = id;
 		this.user = user;
 		this.post = post;
 		this.content = requestDto.getContent();
