@@ -39,6 +39,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
     testImplementation 'org.glassfish:jakarta.el:3.0.3'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind'
 
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
@@ -61,4 +62,11 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'JWT_SECRET_KEY', 'MDwwDQYJKoZIhvcNAQEBBQADKwAwKAIhAK+3ddXzEYqT+Y7Tpl0EygQ+8e/6lWsuDTCkI8i6P11nAgMBAAE='
+    systemProperty 'SOCIAL_NAVER_CLIENT_ID', 'wy4GYtyAgEPqm6mY6Y38'
+    systemProperty 'SOCIAL_NAVER_CLIENT_SECRET', '3mp_KSRKVn'
+    systemProperty 'SOCIAL_KAKAO_CLIENT_ID', '1ed8704ec022b14231965cb5ee1fc5b5'
+    systemProperty 'SOCIAL_KAKAO_CLIENT_SECRET', 'ZmE8O949hYvQYG6LgOXjWGShivxoIqw7'
+    systemProperty 'ADMIN_TOKEN', 'AABnvxRVklrnYxKZ0aHgTBcXukeZygoC'
 }

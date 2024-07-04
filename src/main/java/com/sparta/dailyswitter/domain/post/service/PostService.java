@@ -52,6 +52,8 @@ public class PostService {
 		}
 
 		post.update(requestDto.getTitle(), requestDto.getContents());
+		postRepository.save(post);
+
 		return convertToDto(post);
 	}
 
