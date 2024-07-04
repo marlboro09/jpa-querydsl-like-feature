@@ -23,6 +23,7 @@ import com.sparta.dailyswitter.domain.post.service.PostService;
 import com.sparta.dailyswitter.security.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -35,7 +36,7 @@ public class PostController {
 
 	@PostMapping
 	public ResponseEntity<?> createPost(@RequestBody PostRequestDto requestDto,
-		@AuthenticationPrincipal UserDetails userDetails) {
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		if (userDetails == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
 		}
@@ -45,7 +46,7 @@ public class PostController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto,
-		@AuthenticationPrincipal UserDetails userDetails) {
+		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		if (userDetails == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
 		}
@@ -54,7 +55,7 @@ public class PostController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+	public ResponseEntity<?> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		if (userDetails == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
 		}
@@ -77,6 +78,9 @@ public class PostController {
 	@GetMapping("/following")
 	public Page<PostResponseDto> getFollowingPosts(@RequestParam(defaultValue = "0") int page,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		if (userDetails == null) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+		}
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 		return postService.getFollowedPosts(userDetails.getUser(), pageable);
 	}
