@@ -180,7 +180,7 @@ class PostControllerTest {
     }
 
     /**
-     *  pageable쪽의 문제로 작동이 안됩니다.
+     * pageable쪽의 문제로 작동이 안됩니다.
      */
     @Test
     @DisplayName("팔로우한 게시물 조회 테스트")
@@ -196,7 +196,8 @@ class PostControllerTest {
             .updatedAt(null)
             .build();
 
-        Page<PostResponseDto> page = new PageImpl<>(Collections.singletonList(postResponseDto), PageRequest.of(0, 5), 1);
+        Page<PostResponseDto> page = new PageImpl<>(Collections.singletonList(postResponseDto),
+            PageRequest.of(0, 5), 1);
 
         when(postService.getFollowedPosts(any(User.class), any(Pageable.class))).thenReturn(page);
 
@@ -205,7 +206,10 @@ class PostControllerTest {
             .andExpect(status().isOk())
             .andReturn();
 
-        PageImpl<PostResponseDto> responsePage = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<PageImpl<PostResponseDto>>() {});
+        PageImpl<PostResponseDto> responsePage = objectMapper.readValue(
+            result.getResponse().getContentAsString(),
+            new TypeReference<PageImpl<PostResponseDto>>() {
+            });
 
         assertEquals(1, responsePage.getTotalElements());
         assertEquals(1, responsePage.getTotalPages());

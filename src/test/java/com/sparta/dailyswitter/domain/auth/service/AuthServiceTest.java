@@ -1,9 +1,13 @@
 package com.sparta.dailyswitter.domain.auth.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.sparta.dailyswitter.common.exception.CustomException;
 import com.sparta.dailyswitter.common.exception.ErrorCode;
@@ -169,7 +173,8 @@ class AuthServiceTest {
 
         when(userRepository.findByUserId(requestDto.getUserId())).thenReturn(Optional.of(user));
         when(authenticationManager.authenticate(any(Authentication.class)))
-            .thenReturn(new UsernamePasswordAuthenticationToken(requestDto.getUserId(), requestDto.getPassword()));
+            .thenReturn(new UsernamePasswordAuthenticationToken(requestDto.getUserId(),
+                requestDto.getPassword()));
         when(jwtUtil.createToken(requestDto.getUserId())).thenReturn("token");
         when(jwtUtil.createRefreshToken(requestDto.getUserId())).thenReturn("refreshToken");
 
@@ -208,7 +213,8 @@ class AuthServiceTest {
             .role(UserRoleEnum.WITHDRAW)
             .build();
 
-        CustomException exception = assertThrows(CustomException.class, ()-> authService.signout(requestDto, user));
+        CustomException exception = assertThrows(CustomException.class,
+            () -> authService.signout(requestDto, user));
 
         assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
     }
@@ -226,9 +232,11 @@ class AuthServiceTest {
             .role(UserRoleEnum.USER)
             .build();
 
-        when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(false);
+        when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(
+            false);
 
-        CustomException exception = assertThrows(CustomException.class, () -> authService.signout(requestDto, user));
+        CustomException exception = assertThrows(CustomException.class,
+            () -> authService.signout(requestDto, user));
 
         assertEquals(ErrorCode.INCORRECT_PASSWORD, exception.getErrorCode());
     }
@@ -246,7 +254,8 @@ class AuthServiceTest {
             .role(UserRoleEnum.USER)
             .build();
 
-        when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(true);
+        when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(
+            true);
 
         authService.signout(requestDto, user);
 

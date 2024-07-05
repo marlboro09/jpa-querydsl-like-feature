@@ -144,8 +144,8 @@ public class CommentControllerTest {
             any(User.class))).thenReturn(responseDto);
 
         MvcResult result = mockMvc.perform(put("/api/posts/1/comments/1")
-            .contentType("application/json")
-            .content(objectMapper.writeValueAsString(requestDto)))
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
             .andReturn();
 
@@ -160,8 +160,8 @@ public class CommentControllerTest {
     void deleteComment() throws Exception {
         doNothing().when(commentService).deleteComment(anyLong(), anyLong(), any(User.class));
 
-        MvcResult result =mockMvc.perform(delete("/api/posts/1/comments/1")
-            .content("application/json"))
+        MvcResult result = mockMvc.perform(delete("/api/posts/1/comments/1")
+                .content("application/json"))
             .andExpect(status().isOk())
             .andReturn();
 
