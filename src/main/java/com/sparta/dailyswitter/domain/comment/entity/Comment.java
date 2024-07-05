@@ -62,4 +62,8 @@ public class Comment extends Timestamped {
 	public void subCommentLikes() {
 		this.commentLikes = commentLikes - 1L;
 	}
+
+	public String getPostTitle() {
+		return post.getTitle();
+	}
 }
