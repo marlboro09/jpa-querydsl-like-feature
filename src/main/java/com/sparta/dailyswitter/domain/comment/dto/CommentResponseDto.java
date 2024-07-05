@@ -1,13 +1,13 @@
 package com.sparta.dailyswitter.domain.comment.dto;
 
-import java.time.LocalDateTime;
-
 import com.sparta.dailyswitter.domain.comment.entity.Comment;
-
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CommentResponseDto {
 	private String postTitle;
 	private String content;
