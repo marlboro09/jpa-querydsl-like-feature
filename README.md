@@ -11,3 +11,6 @@
 - 🆕 내가 좋아하는 게시글 목록 조회기능 추가하기
 - 🆕 내가 좋아하는 댓글 목록 조회기능 추가하기
 - 🆕 프로필에 내가 좋아요한 게시글 수/댓글 수 응답필드 추가하기
+
+![image](https://github.com/marlboro09/jpa-querydsl-like-feature/assets/165752968/9ddc44f4-27c1-4764-b9f4-2493f24e1610)
+
